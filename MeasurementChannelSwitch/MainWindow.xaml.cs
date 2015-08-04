@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 
 namespace MeasurementChannelSwitch
 {
+    using ChannelSwitchLibrary;
+
     internal enum Switch
     {
         On,
@@ -26,16 +28,16 @@ namespace MeasurementChannelSwitch
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Layout _layout;
+        //private Layout _layout;
         private int _currentChannel;
-        private LayoutHelper _layoutHelper;
+        
         
         private Button _currentButton;
         private const int MAX_CHANNELS = 32;
         private object syncRoot = new object();
         private SolidColorBrush _defaultBrush;
         private SolidColorBrush _OnBrush;
-        
+        private ChannelSwitch _switch;
 
 
         public MainWindow()
@@ -43,9 +45,17 @@ namespace MeasurementChannelSwitch
             InitializeComponent();
             _defaultBrush = (SolidColorBrush) Resources["DefaultBrush"];
             _OnBrush = Brushes.Green;
-            
+            _switch = new ChannelSwitch();
+            _switch.Connecting += _switch_Connecting;
+            _switch.ConnectionEstablished += _switch_ConnectionEstablished;
+            _switch.ConnectionLost += _switch_ConnectionLost;
+            _switch.ChannelStateRequest += _switch_ChannelStateRequest;
+            _switch.ChannelStateConfirmation += _switch_ChannelStateConfirmation;
+            _switch.Error += _switch_Error;
+            _switch.Exiting += _switch_Exiting;
         }
 
+        
         private async void ButtonClick(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
@@ -53,7 +63,6 @@ namespace MeasurementChannelSwitch
                 throw new Exception("Refferenced object is not button");
             var N = ParseChannelNumber(button);
             await SwitchChannel(N, button);
-            
         }
 
         private int ParseChannelNumber(Button sender)
@@ -69,11 +78,11 @@ namespace MeasurementChannelSwitch
         {
             sender.Background = _OnBrush;
         }
+
         private void SwitchOffBackground(Button sender)
         {
             sender.Background = _defaultBrush;
         }
-
 
         private async Task SwitchChannel(int ChannelNumber, Button Sender)
         {
@@ -82,7 +91,7 @@ namespace MeasurementChannelSwitch
                 if(Object.ReferenceEquals(Sender, _currentButton))
                 {
                     SwitchOffBackground(Sender);
-                    SendRequest(_currentChannel, Switch.Off);
+                    SendRequest((short)_currentChannel,false);
                     _currentChannel = 0;
                     _currentButton = null;
                 }
@@ -91,27 +100,75 @@ namespace MeasurementChannelSwitch
                     if(_currentButton!=null)
                     {
                         SwitchOffBackground(_currentButton);
-                        SendRequest(_currentChannel, Switch.Off);
+                        SendRequest((short)_currentChannel, false);
                     }
 
                     _currentButton = Sender;
                     _currentChannel = ChannelNumber;
                     SwitchOnBackground(_currentButton);
-                    SendRequest(ChannelNumber, Switch.On);
+                    SendRequest((short)ChannelNumber, true);
                     
                 }
             }
         }
 
-        private bool SendRequest(int channelNumber, Switch state)
+        private bool SendRequest(short channelNumber, bool state)
         {
-            return false;
+            return _switch.Switch(channelNumber, state);
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
         {
-            var a = new ContactPadsControl();
-            a.Visibility = System.Windows.Visibility.Visible;
+            if (!_switch.Initialized)
+                _switch.Initialize();
         }
+
+        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        {
+            if (_switch.Initialized)
+                _switch.Exit();
+        }
+
+
+        void _switch_Exiting(object sender, EventArgs e)
+        {
+            SetMessage("Exit");
+        }
+
+        void _switch_Error(object sender, string e)
+        {
+            SetMessage(e);
+        }
+
+        void _switch_ChannelStateConfirmation(object sender, ChannelStatus e)
+        {
+            SetMessage(String.Format("State {0} for channel {1} is set", e.State, e.ChannelNumber));
+        }
+
+        void _switch_ChannelStateRequest(object sender, ChannelStatus e)
+        {
+            SetMessage(String.Format("Setting state {0} for channel {1}", e.State, e.ChannelNumber));
+        }
+
+        void _switch_ConnectionLost(object sender, EventArgs e)
+        {
+            SetMessage("Connection lost...");
+        }
+
+        void _switch_ConnectionEstablished(object sender, EventArgs e)
+        {
+            SetMessage(viewModel.Message = "Connection established...");
+        }
+
+        void _switch_Connecting(object sender, EventArgs e)
+        {
+            SetMessage(viewModel.Message = "Connecting...");
+        }
+
+        void SetMessage(string Message)
+        {
+            Dispatcher.BeginInvoke(new Action(() => viewModel.Message = Message));
+        }
+        
     }
 }

@@ -191,26 +191,35 @@ namespace ChannelSwitchLibrary
             OnErrorEvent("Error > Unknown command");
         }
 
-        
-        
+
+
 
         public void Exit()
         {
-            _connectionManager.ConnectionFound -= _connectionManager_ConnectionFound;
-            _connectionManager.ConnectionTimeout -= _connectionManager_ConnectionTimeout;
+            OnExiting();
             if (_connectionManager != null)
+            {
+                _connectionManager.ConnectionFound -= _connectionManager_ConnectionFound;
+                _connectionManager.ConnectionTimeout -= _connectionManager_ConnectionTimeout;
                 _connectionManager.Dispose();
+            }
+            if (_cmdMessenger != null)
+            {
+                _cmdMessenger.Disconnect();
+                _cmdMessenger.Dispose();
+            }
+            if (_transport != null)
+            {
+                _transport.Dispose();
+            }
 
-            _cmdMessenger.Disconnect();
-            _cmdMessenger.Dispose();
-            _transport.Dispose();
         }
 
         public bool Switch(short ChannelName, bool state)
         {
             if (!Initialized)
                 throw new Exception("Not yet initialized");
-
+            OnChannelStateRequest(new ChannelStatus(ChannelName, state));
             var command = new SendCommand((int)Command.SwitchChannel,(int)Command.Acknowledge,1000);
             command.AddArgument(ChannelName);
             command.AddArgument(state);
@@ -221,7 +230,10 @@ namespace ChannelSwitchLibrary
                 var cs = response.ReadBoolArg();
                 Debug.WriteLine(String.Format("Command response - channelNumber={0}; channelState={1}", cn,cs));
                 if (ChannelName == cn && state == cs)
+                {
+                    OnChannelStateConfirmation(new ChannelStatus(cn, cs));
                     return true;
+                }
                 
             }
             return false;
