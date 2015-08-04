@@ -12,15 +12,17 @@ namespace Test
         static void Main(string[] args)
         {
             var sw = new ChannelSwitch();
-            sw.Setup(new ConnectionParams { BaudRate = 115200, PortName = "COM3" });
-            //sw.Setup();
-            
-            for (int i = 0; i < 100; i++)
+            //sw.Setup(new ConnectionParams { BaudRate = 115200, PortName = "COM7" });
+            sw.Initialize();
+            System.Threading.Thread.Sleep(1000);
+            while (!sw.Initialized) ;
+
+            for (short i = 0; i < 40; i++)
             {
-                sw.Switch(1, true);
+                sw.Switch(i, true);
                 System.Threading.Thread.Sleep(100);
             }
-
+            Console.ReadKey();
             
         }
     }

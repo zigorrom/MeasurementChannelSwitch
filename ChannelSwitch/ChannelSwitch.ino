@@ -22,7 +22,7 @@ void attachCommandCallbacks()
   cmdMessenger.attach(OnUnknownCommand);
   cmdMessenger.attach(kWatchdog, OnWatchdogRequest); 
   cmdMessenger.attach(kSwitchChannel, OnChannelSwitch);
-    //cmdMessenger.attach(
+    
 }
 
 void OnWatchdogRequest()
@@ -37,14 +37,15 @@ void OnUnknownCommand()
 
 void OnChannelSwitch()
 {
-  uint16_t channelNumber = cmdMessenger.readBinArg<uint16_t>();
-  bool state = cmdMessenger.readBinArg<bool>();
+  uint16_t channelNumber = cmdMessenger.readInt16Arg();//.readBinArg<uint16_t>();
+  bool state = cmdMessenger.readBoolArg();//.readBinArg<bool>();
 
   if(cmdMessenger.isArgOk()&&channelNumber>0&&channelNumber<=MAX_CHANNEL)
   {
     SwitchChannel(channelNumber, state);
     cmdMessenger.sendCmdStart(kAcknowledge);
-    cmdMessenger.sendCmdBinArg<uint16_t>(channelNumber);
+    cmdMessenger.sendCmdArg<uint16_t>(channelNumber);
+    cmdMessenger.sendCmdArg<bool>(state);
     cmdMessenger.sendCmdEnd();    
   }else
   {
@@ -53,7 +54,7 @@ void OnChannelSwitch()
   
 }
 
-void SwitchChannel(uint16_t number, bool state)
+void SwitchChannel(uint16_t number, uint16_t state)
 {
   
 }

@@ -10,15 +10,8 @@ namespace ChannelSwitchLibrary
     using CommandMessenger.Queue;
     using CommandMessenger.Transport;
     using CommandMessenger.Transport.Serial;
+    using System.Diagnostics;
 
-    
-
-    public struct ConnectionParams
-    {
-        public string PortName { get; set; }
-        public int BaudRate { get; set; }
-        
-    }
     
     enum Command
     {
@@ -28,81 +21,141 @@ namespace ChannelSwitchLibrary
         Error
     }
 
+   
+
+    public class ChannelStatus
+    {
+        public int ChannelNumber{get;private set;}
+        public bool State{get;private set;}
+        public ChannelStatus(int channelNumber, bool channelState)
+        {
+            ChannelNumber = channelNumber;
+            State = channelState;
+        }
+    }
+
     public class ChannelSwitch
     {
+        public event EventHandler ConnectionEstablished;
+        private void OnConnectionEstablished()
+        {
+            var handler = ConnectionEstablished;
+            if (handler != null)
+                handler(this, new EventArgs());
+        }
+        
+        public event EventHandler ConnectionLost;
+        private void OnConnectionLost()
+        {
+            var handler = ConnectionLost;
+            if (handler != null)
+                handler(this, new EventArgs());
+        }
+
+        public event EventHandler<ChannelStatus> ChannelStateRequest;
+        private void OnChannelStateRequest(ChannelStatus status)
+        {
+            var handler = ChannelStateRequest;
+            if (handler != null)
+                handler(this, status);
+        }
+
+        public event EventHandler<ChannelStatus> ChannelStateConfirmation;
+        private void OnChannelStateConfirmation(ChannelStatus status)
+        {
+            var handler = ChannelStateConfirmation;
+            if (handler != null)
+                handler(this, status);
+        }
+        
+        public event EventHandler Connecting;
+        private void OnConnecting()
+        {
+            var handler = Connecting;
+            if (handler != null)
+                handler(this, new EventArgs());
+        }
+
+        public event EventHandler Exiting;
+        private void OnExiting()
+        {
+            var handler = Exiting;
+            if (handler != null)
+                handler(this, new EventArgs());
+        }
+
+        public event EventHandler<string> Error;
+        private void OnErrorEvent(string Message)
+        {
+            var handler = Error;
+            if (handler != null)
+                handler(this, Message);
+        }
+
+        const string UniqueDeviceID = "517cea54-8f17-4761-b735-094897c20ffd";
+        const int WatchdogTimeout = 5000;
+        const int WatchdogRetryTimeout = 100;
+
         //public bool RunLoop { get; set; }
         private ITransport _transport;
         private CmdMessenger _cmdMessenger;
         private ConnectionManager _connectionManager;
         public bool Initialized { get; private set; }
 
-        const string UniqueDeviceID = "517cea54-8f17-4761-b735-094897c20ffd";
+        public ChannelSwitch()
+        {
+            Initialized = false;
+        }
 
         ~ChannelSwitch()
         {
             Exit();
         }
 
-        public ChannelSwitch()
+        public void Initialize()
         {
+            Debug.WriteLine("***********************************START*************************");
 
-        }
+            _transport = new SerialTransport { CurrentSerialSettings = { DtrEnable = false } };
 
-        [Obsolete("",true)]
-        public void Setup()
-        {
-            _transport = new SerialTransport
-            {
-                CurrentSerialSettings = { DtrEnable = false }
-            };
+            _cmdMessenger = new CmdMessenger(_transport, BoardType.Bit16) { PrintLfCr = false };
+            _cmdMessenger.NewLineReceived += _cmdMessenger_NewLineReceived;
+            _cmdMessenger.NewLineSent += _cmdMessenger_NewLineSent;
 
-            _cmdMessenger = new CmdMessenger(_transport, BoardType.Bit16)
-            {
-                PrintLfCr = false
-            };
-            //_cmdMessenger.AddReceiveCommandStrategy(new )
             AttachCallbacks();
             _connectionManager = new SerialConnectionManager((_transport as SerialTransport), _cmdMessenger, (int)Command.Watchdog, UniqueDeviceID);
+
             _connectionManager.WatchdogEnabled = true;
+            _connectionManager.WatchdogTimeout = WatchdogTimeout;
+            _connectionManager.WatchdogRetryTimeout = WatchdogRetryTimeout;
+
             _connectionManager.ConnectionFound += _connectionManager_ConnectionFound;
+            _connectionManager.ConnectionTimeout += _connectionManager_ConnectionTimeout;
+            OnConnecting();
             _connectionManager.StartConnectionManager();
-            //throw new Exception();
+        }
+
+        void _connectionManager_ConnectionTimeout(object sender, EventArgs e)
+        {
+            Initialized = false;
+            OnConnectionLost();
         }
 
         void _connectionManager_ConnectionFound(object sender, EventArgs e)
         {
-            //throw new NotImplementedException();
-        }
-
-       
-
-        public void Setup(ConnectionParams connectionParams)
-        {
-            _transport = new SerialTransport
-            {
-                CurrentSerialSettings = { PortName = connectionParams.PortName, BaudRate = connectionParams.BaudRate, DtrEnable = false }
-            };
-
-            _cmdMessenger = new CmdMessenger(_transport, BoardType.Bit16)
-            {
-                PrintLfCr = false
-            };
-
-            AttachCallbacks();
-
-            _cmdMessenger.NewLineReceived += _cmdMessenger_NewLineReceived;
-            _cmdMessenger.NewLineSent += _cmdMessenger_NewLineSent;
-            _cmdMessenger.Connect();
+            Initialized = true;
+            Debug.WriteLine("Connection found");
+            OnConnectionEstablished();
         }
 
         void _cmdMessenger_NewLineSent(object sender, CommandEventArgs e)
         {
-            //throw new NotImplementedException();
+            Debug.WriteLine(String.Format("Sent > {0}",e.Command.CommandString()));
         }
 
         void _cmdMessenger_NewLineReceived(object sender, CommandEventArgs e)
         {
-            //throw new NotImplementedException();
+            Debug.WriteLine(String.Format("Received > {0}", e.Command.CommandString()));
         }
 
         private void AttachCallbacks()
@@ -110,48 +163,69 @@ namespace ChannelSwitchLibrary
             _cmdMessenger.Attach(OnUnknownCommand);
             _cmdMessenger.Attach((int)Command.Acknowledge, OnAcknowledge);
             _cmdMessenger.Attach((int)Command.Error, OnError);
+            _cmdMessenger.Attach((int)Command.Watchdog, OnWatchdog);
+        }
+
+        private void OnWatchdog(ReceivedCommand receivedCommand)
+        {
+            Debug.WriteLine(String.Format("Watchdog > {0}", receivedCommand.CommandString()));
         }
 
         private void OnError(ReceivedCommand receivedCommand)
         {
-            //throw new NotImplementedException();
+            Debug.WriteLine(String.Format("Error > {0}", receivedCommand.CommandString()));
+            OnErrorEvent(String.Format("Error > {0}", receivedCommand.CommandString()));
         }
 
         private void OnAcknowledge(ReceivedCommand receivedCommand)
         {
-            //throw new NotImplementedException();
+            Debug.WriteLine(receivedCommand.CommandString());
+            //var a = receivedCommand.ReadInt16Arg();
+            //var b = receivedCommand.ReadBoolArg();
+            //Debug.WriteLine(String.Format("channel number: {0}, status {1}", a,b));
         }
 
         private void OnUnknownCommand(ReceivedCommand receivedCommand)
         {
-            //throw new NotImplementedException();
+            Debug.WriteLine("Unknown command");
+            OnErrorEvent("Error > Unknown command");
         }
 
-        void Initialize()
-        {
-
-        }
+        
+        
 
         public void Exit()
         {
+            _connectionManager.ConnectionFound -= _connectionManager_ConnectionFound;
+            _connectionManager.ConnectionTimeout -= _connectionManager_ConnectionTimeout;
             if (_connectionManager != null)
                 _connectionManager.Dispose();
 
             _cmdMessenger.Disconnect();
             _cmdMessenger.Dispose();
             _transport.Dispose();
-
-            
-            
         }
 
-        public bool Switch(int ChannelName, bool State)
+        public bool Switch(short ChannelName, bool state)
         {
-            var command = new SendCommand((int)Command.SwitchChannel, (int)Command.Acknowledge, 1000);
-            command.AddBinArgument(ChannelName);
-            command.AddBinArgument(State);
+            if (!Initialized)
+                throw new Exception("Not yet initialized");
+
+            var command = new SendCommand((int)Command.SwitchChannel,(int)Command.Acknowledge,1000);
+            command.AddArgument(ChannelName);
+            command.AddArgument(state);
             var response = _cmdMessenger.SendCommand(command);
+            if (response.Ok)
+            {
+                var cn = response.ReadInt16Arg();
+                var cs = response.ReadBoolArg();
+                Debug.WriteLine(String.Format("Command response - channelNumber={0}; channelState={1}", cn,cs));
+                if (ChannelName == cn && state == cs)
+                    return true;
+                
+            }
             return false;
+            
         }
 
     }
