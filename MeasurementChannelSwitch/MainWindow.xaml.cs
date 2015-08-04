@@ -88,6 +88,11 @@ namespace MeasurementChannelSwitch
         {
             lock(syncRoot)
             {
+                if(!_switch.Initialized)
+                {
+                    SetMessage("Initialize first!");
+                    return;
+                }
                 if(Object.ReferenceEquals(Sender, _currentButton))
                 {
                     SwitchOffBackground(Sender);

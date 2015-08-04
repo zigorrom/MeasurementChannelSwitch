@@ -109,7 +109,7 @@ namespace ChannelSwitchLibrary
 
         ~ChannelSwitch()
         {
-            Exit();
+            //Exit();
         }
 
         public void Initialize()
@@ -210,7 +210,9 @@ namespace ChannelSwitchLibrary
             }
             if (_transport != null)
             {
+                _transport.Disconnect();
                 _transport.Dispose();
+                
             }
 
         }

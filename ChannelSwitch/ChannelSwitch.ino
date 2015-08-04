@@ -61,6 +61,14 @@ void OnChannelSwitch()
   }
   
 }
+void Initialize()
+{
+  int i;
+  for(;i<=MAX_CHANNEL;++i)
+  {
+    SwitchChannel(i,0);
+   }
+}
 
 void SwitchChannel(uint16_t number, uint16_t state)
 {
