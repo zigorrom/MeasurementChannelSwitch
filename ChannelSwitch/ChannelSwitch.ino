@@ -32,7 +32,7 @@ void OnWatchdogRequest()
 
 void OnUnknownCommand()
 {
-  cmdMessenger.sendCmd(0,"Command without attached callback");
+  cmdMessenger.sendCmd(kError,"Command without attached callback");
 }
 
 void OnChannelSwitch()

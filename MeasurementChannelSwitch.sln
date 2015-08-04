@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandMessenger", "Command
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandMessenger.Transport.Serial", "CommandMessenger.Transport.Serial\CommandMessenger.Transport.Serial.csproj", "{00D85F0B-00A5-41FA-8A99-428C0199C663}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChannelSwitchLibrary", "ChannelSwitchLibrary\ChannelSwitchLibrary.csproj", "{30206ED1-530D-4EAE-9895-7D6E2F49C79F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{510D88D8-1C1E-4302-8E26-F46377336E0F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,18 @@ Global
 		{00D85F0B-00A5-41FA-8A99-428C0199C663}.Release|Any CPU.Build.0 = Release|Any CPU
 		{00D85F0B-00A5-41FA-8A99-428C0199C663}.Release|x86.ActiveCfg = Release|x86
 		{00D85F0B-00A5-41FA-8A99-428C0199C663}.Release|x86.Build.0 = Release|x86
+		{30206ED1-530D-4EAE-9895-7D6E2F49C79F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30206ED1-530D-4EAE-9895-7D6E2F49C79F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30206ED1-530D-4EAE-9895-7D6E2F49C79F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{30206ED1-530D-4EAE-9895-7D6E2F49C79F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30206ED1-530D-4EAE-9895-7D6E2F49C79F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30206ED1-530D-4EAE-9895-7D6E2F49C79F}.Release|x86.ActiveCfg = Release|Any CPU
+		{510D88D8-1C1E-4302-8E26-F46377336E0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{510D88D8-1C1E-4302-8E26-F46377336E0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{510D88D8-1C1E-4302-8E26-F46377336E0F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{510D88D8-1C1E-4302-8E26-F46377336E0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{510D88D8-1C1E-4302-8E26-F46377336E0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{510D88D8-1C1E-4302-8E26-F46377336E0F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

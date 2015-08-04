@@ -35,7 +35,7 @@ namespace MeasurementChannelSwitch
         private object syncRoot = new object();
         private SolidColorBrush _defaultBrush;
         private SolidColorBrush _OnBrush;
-        private ChannelSwitch _switch;
+        
 
 
         public MainWindow()
@@ -43,10 +43,7 @@ namespace MeasurementChannelSwitch
             InitializeComponent();
             _defaultBrush = (SolidColorBrush) Resources["DefaultBrush"];
             _OnBrush = Brushes.Green;
-            _switch = new ChannelSwitch();
-            _switch.Setup();
-            _switch.SwitchChannel(1, true);
-            _switch.Exit();
+            
         }
 
         private async void ButtonClick(object sender, RoutedEventArgs e)

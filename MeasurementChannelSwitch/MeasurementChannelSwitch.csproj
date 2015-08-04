@@ -85,7 +85,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ChannelSwitch.cs" />
     <Compile Include="ContactPadsControl.xaml.cs">
       <DependentUpon>ContactPadsControl.xaml</DependentUpon>
     </Compile>
@@ -130,16 +129,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CommandMessenger.Transport.Serial\CommandMessenger.Transport.Serial.csproj">
-      <Project>{00d85f0b-00a5-41fa-8a99-428c0199c663}</Project>
-      <Name>CommandMessenger.Transport.Serial</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CommandMessenger\CommandMessenger.csproj">
-      <Project>{3cf8f8fc-6f5c-46f8-94dc-c2e4c505eca4}</Project>
-      <Name>CommandMessenger</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\layout1.PNG" />

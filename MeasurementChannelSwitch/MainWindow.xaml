@@ -11,6 +11,61 @@
         <GridLength x:Key="GridHeight">20*</GridLength>
         <GridLength x:Key="MenuBarHeight">20</GridLength>
         <SolidColorBrush x:Key="DefaultBrush" Color="#FFDDDDDD"/>
+        <Style x:Key="FocusVisual">
+        	<Setter Property="Control.Template">
+        		<Setter.Value>
+        			<ControlTemplate>
+        				<Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
+        	<Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        	<Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+        	<Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+        	<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        	<Setter Property="BorderThickness" Value="1"/>
+        	<Setter Property="HorizontalContentAlignment" Value="Center"/>
+        	<Setter Property="VerticalContentAlignment" Value="Center"/>
+        	<Setter Property="Padding" Value="1"/>
+        	<Setter Property="Template">
+        		<Setter.Value>
+        			<ControlTemplate TargetType="{x:Type Button}">
+        				<Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+        					<ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        				</Border>
+        				<ControlTemplate.Triggers>
+        					<Trigger Property="IsDefaulted" Value="true">
+        						<Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+        					</Trigger>
+        					<Trigger Property="IsMouseOver" Value="true">
+        						<Setter Property="BorderThickness" Value="2"/>
+        						<Setter Property="BorderBrush" Value="#FF1C6903"/>
+        					</Trigger>
+        					<Trigger Property="IsPressed" Value="true">
+        						<Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+        						<Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+        					</Trigger>
+        					<Trigger Property="IsEnabled" Value="false">
+        						<Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+        						<Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+        						<Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+        					</Trigger>
+        				</ControlTemplate.Triggers>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -46,40 +101,40 @@
             </MenuItem>
         </Menu>
         <StatusBar Grid.ColumnSpan="6" Grid.Row="7"/>
-        <Button Click="ButtonClick"  Content="1" Margin="3" Grid.Row="1" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="2" Margin="3" Grid.Row="1" Grid.Column="1" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="3" Margin="3" Grid.Row="1" Grid.Column="2" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="4" Margin="3" Grid.Row="1" Grid.Column="3" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="5" Margin="3" Grid.Row="1" Grid.Column="4" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="6" Margin="3" Grid.Row="1" Grid.Column="5" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="7" Margin="3" Grid.Row="2" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="8" Margin="3" Grid.Row="2" Grid.Column="1" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="9" Margin="3" Grid.Row="2" Grid.Column="2" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="10" Margin="3" Grid.Row="2" Grid.Column="3" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="11" Margin="3" Grid.Row="2" Grid.Column="4" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="12" Margin="3" Grid.Row="2" Grid.Column="5" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="13" Margin="3" Grid.Row="3" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="14" Margin="3" Grid.Row="3" Grid.Column="1" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="15" Margin="3" Grid.Row="3" Grid.Column="2" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="16" Margin="3" Grid.Row="3" Grid.Column="3" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="17" Margin="3" Grid.Row="3" Grid.Column="4" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="18" Margin="3" Grid.Row="3" Grid.Column="5" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="19" Margin="3" Grid.Row="4" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="20" Margin="3" Grid.Row="4" Grid.Column="1" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="21" Margin="3" Grid.Row="4" Grid.Column="2" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="22" Margin="3" Grid.Row="4" Grid.Column="3" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="23" Margin="3" Grid.Row="4" Grid.Column="4" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="24" Margin="3" Grid.Row="4" Grid.Column="5" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="25" Margin="3" Grid.Row="5" Grid.Column="0" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="26" Margin="3" Grid.Row="5" Grid.Column="1" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="27" Margin="3" Grid.Row="5" Grid.Column="2" Background="{DynamicResource DefaultBrush}" />
-        <Button Click="ButtonClick" Content="28" Margin="3" Grid.Row="5" Grid.Column="3" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="29" Margin="3" Grid.Row="5" Grid.Column="4" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="30" Margin="3" Grid.Row="5" Grid.Column="5" Background="{DynamicResource DefaultBrush}"/>
+        <Button Click="ButtonClick"  Content="1" Margin="3" Grid.Row="1" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="2" Margin="3" Grid.Row="1" Grid.Column="1" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="3" Margin="3" Grid.Row="1" Grid.Column="2" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="4" Margin="3" Grid.Row="1" Grid.Column="3" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="5" Margin="3" Grid.Row="1" Grid.Column="4" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="6" Margin="3" Grid.Row="1" Grid.Column="5" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="7" Margin="3" Grid.Row="2" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="8" Margin="3" Grid.Row="2" Grid.Column="1" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="9" Margin="3" Grid.Row="2" Grid.Column="2" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="10" Margin="3" Grid.Row="2" Grid.Column="3" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="11" Margin="3" Grid.Row="2" Grid.Column="4" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="12" Margin="3" Grid.Row="2" Grid.Column="5" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="13" Margin="3" Grid.Row="3" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="14" Margin="3" Grid.Row="3" Grid.Column="1" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="15" Margin="3" Grid.Row="3" Grid.Column="2" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="16" Margin="3" Grid.Row="3" Grid.Column="3" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="17" Margin="3" Grid.Row="3" Grid.Column="4" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="18" Margin="3" Grid.Row="3" Grid.Column="5" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="19" Margin="3" Grid.Row="4" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="20" Margin="3" Grid.Row="4" Grid.Column="1" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="21" Margin="3" Grid.Row="4" Grid.Column="2" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="22" Margin="3" Grid.Row="4" Grid.Column="3" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="23" Margin="3" Grid.Row="4" Grid.Column="4" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="24" Margin="3" Grid.Row="4" Grid.Column="5" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="25" Margin="3" Grid.Row="5" Grid.Column="0" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="26" Margin="3" Grid.Row="5" Grid.Column="1" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="27" Margin="3" Grid.Row="5" Grid.Column="2" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}" />
+        <Button Click="ButtonClick" Content="28" Margin="3" Grid.Row="5" Grid.Column="3" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="29" Margin="3" Grid.Row="5" Grid.Column="4" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="30" Margin="3" Grid.Row="5" Grid.Column="5" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
         <Button Content="" Margin="3" Grid.Row="6" IsEnabled="False"/>
         <Button Content="" Margin="3" Grid.Row="6" Grid.Column="1" IsEnabled="False"/>
-        <Button Click="ButtonClick" Content="31" Margin="3" Grid.Row="6" Grid.Column="2" Background="{DynamicResource DefaultBrush}"/>
-        <Button Click="ButtonClick" Content="32" Margin="3" Grid.Row="6" Grid.Column="3" Background="{DynamicResource DefaultBrush}"/>
+        <Button Click="ButtonClick" Content="31" Margin="3" Grid.Row="6" Grid.Column="2" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
+        <Button Click="ButtonClick" Content="32" Margin="3" Grid.Row="6" Grid.Column="3" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
         <Button Content="" Margin="3" Grid.Row="6" Grid.Column="4" IsEnabled="False"/>
         <Button Content="" Margin="3" Grid.Row="6" Grid.Column="5" IsEnabled="False"/>
 

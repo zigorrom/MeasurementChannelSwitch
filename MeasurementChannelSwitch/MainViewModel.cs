@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace MeasurementChannelSwitch
 {
-    using CommandMessenger;
-    using CommandMessenger.Transport.Serial;
+    
 using System.Windows.Controls;
 
 
