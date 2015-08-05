@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ChannelSwitchLibrary")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Library for relay switch control")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Forschungszentrum Juelich")]
 [assembly: AssemblyProduct("ChannelSwitchLibrary")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]

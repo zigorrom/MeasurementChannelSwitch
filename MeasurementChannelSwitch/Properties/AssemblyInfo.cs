@@ -8,9 +8,9 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MeasurementChannelSwitch")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Application for switching measurement channels")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Forschungszentrum Juelich")]
 [assembly: AssemblyProduct("MeasurementChannelSwitch")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
