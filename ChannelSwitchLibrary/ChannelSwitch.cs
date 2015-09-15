@@ -18,7 +18,9 @@ namespace ChannelSwitchLibrary
         Watchdog,
         Acknowledge,
         SwitchChannel,
-        Error
+        Error,
+        MotorCommand,
+        
     }
 
    
@@ -240,6 +242,32 @@ namespace ChannelSwitchLibrary
             }
             return false;
             
+        }
+
+
+        public bool MoveMotor(short Channel, short Speed)
+        {
+            if (!Initialized)
+                throw new Exception("Not yet initialized");
+           
+            var command = new SendCommand((int)Command.MotorCommand, (int)Command.Acknowledge, 1000);
+            command.AddArgument(Channel);
+            command.AddArgument(Speed);
+            var response = _cmdMessenger.SendCommand(command);
+            if (response.Ok)
+            {
+                var cn = response.ReadInt16Arg();
+                var cs = response.ReadInt16Arg();
+                Debug.WriteLine(String.Format("Command response - channel={0}; speed={1}", cn, cs));
+                if (Channel == cn && Speed == cs)
+                {
+                    Debug.WriteLine("Alles gut");
+                    //OnChannelStateConfirmation(new ChannelStatus(cn, cs));
+                    return true;
+                }
+
+            }
+            return false;
         }
 
     }
