@@ -174,6 +174,39 @@ namespace MeasurementChannelSwitch
         {
             Dispatcher.BeginInvoke(new Action(() => viewModel.Message = Message));
         }
+
+        private void SendMotorCommand(short channel, short speed)
+        {
+            _switch.MoveMotor(channel, speed);
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+            lock (syncRoot)
+            {
+                if (!_switch.Initialized)
+                {
+                    SetMessage("Initialize first!");
+                    return;
+                }
+                SendMotorCommand(1, (short)e.NewValue);
+            }
+           
+        }
+
+        private void Slider_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            lock (syncRoot)
+            {
+                if (!_switch.Initialized)
+                {
+                    SetMessage("Initialize first!");
+                    return;
+                }
+                SendMotorCommand(2, (short)e.NewValue);
+            }
+        }
         
     }
 }

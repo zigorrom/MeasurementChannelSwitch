@@ -4,7 +4,9 @@
         xmlns:local="clr-namespace:MeasurementChannelSwitch"
         Title="Channel switch" Height="360.542" Width="283.584"  ResizeMode="NoResize" >
     <Window.DataContext>
-        <local:MainViewModel x:Name="viewModel"/>
+        
+    <local:MainViewModel x:Name="viewModel"/>
+    
     </Window.DataContext>
     <Window.Resources>
         <GridLength x:Key="GridColumnWidth">20*</GridLength>
@@ -76,7 +78,8 @@
             <RowDefinition Height="{DynamicResource GridHeight}"/>
             <RowDefinition Height="{DynamicResource GridHeight}"/>
             <RowDefinition Height="{DynamicResource GridHeight}"/>
-            <RowDefinition Height="{DynamicResource MenuBarHeight}"/>
+            <RowDefinition Height="{DynamicResource GridHeight}"/>
+            <RowDefinition Height="{DynamicResource GridColumnWidth}"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="{DynamicResource GridColumnWidth}"/>
@@ -86,7 +89,7 @@
             <ColumnDefinition Width="{DynamicResource GridColumnWidth}"/>
             <ColumnDefinition Width="{DynamicResource GridColumnWidth}"/>
         </Grid.ColumnDefinitions>
-        <Menu Grid.ColumnSpan="6" Margin="0,0,0.4,0">
+        <Menu Grid.ColumnSpan="6">
             <MenuItem Header="Connection" >
                 <MenuItem Header="Connect" HorizontalAlignment="Left" Width="139.2" Click="MenuItem_Click_1"/>
                 <Separator HorizontalAlignment="Left" Height="2" Width="139"/>
@@ -94,7 +97,7 @@
                 <!--<MenuItem Header="Settings" HorizontalAlignment="Left" Width="139.2"/>-->
 
             </MenuItem>
-            
+
             <MenuItem Header="Layout" >
 
                 <MenuItem Header="Layout 1" HorizontalAlignment="Left" Width="139.2"/>
@@ -102,9 +105,7 @@
 
             </MenuItem>
         </Menu>
-        <StatusBar Grid.ColumnSpan="6" Grid.Row="7">
-            <StatusBarItem Content="{Binding Message, UpdateSourceTrigger=PropertyChanged}" Height="20" VerticalAlignment="Top"/>
-        </StatusBar>
+       
         <Button Click="ButtonClick"  Content="1" Margin="3" Grid.Row="1" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
         <Button Click="ButtonClick" Content="2" Margin="3" Grid.Row="1" Grid.Column="1" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
         <Button Click="ButtonClick" Content="3" Margin="3" Grid.Row="1" Grid.Column="2" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
@@ -141,6 +142,14 @@
         <Button Click="ButtonClick" Content="32" Margin="3" Grid.Row="6" Grid.Column="3" Background="{DynamicResource DefaultBrush}" Style="{DynamicResource ButtonStyle}"/>
         <Button Content="" Margin="3" Grid.Row="6" Grid.Column="4" IsEnabled="False"/>
         <Button Content="" Margin="3" Grid.Row="6" Grid.Column="5" IsEnabled="False"/>
+        <Slider x:Name="A" IsSnapToTickEnabled="True" Grid.ColumnSpan="2" Grid.Row="7" Margin="3" Maximum="255" Minimum="-255" ValueChanged="Slider_ValueChanged_1" SmallChange="1"/>
+        <TextBlock Grid.Row="7" Grid.Column="2" Text="{Binding ElementName=A, Path=Value}"/>
+
+        <Slider x:Name="B" IsSnapToTickEnabled="True" Grid.ColumnSpan="3" Grid.Column="3" Margin="3" Grid.Row="7" Maximum="255" Minimum="-255" ValueChanged="Slider_ValueChanged" SmallChange="1"/>
+        <TextBlock Grid.Row="7" Grid.Column="5" Text="{Binding ElementName=B, Path=Value}"/>
+        <StatusBar Grid.ColumnSpan="6" Grid.Row="8">
+            <StatusBarItem Content="{Binding Message, UpdateSourceTrigger=PropertyChanged}" Height="20" VerticalAlignment="Top"/>
+        </StatusBar>
 
     </Grid>
 </Window>

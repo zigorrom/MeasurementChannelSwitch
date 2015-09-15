@@ -74,15 +74,15 @@ void OnChannelSwitch()
 
 void OnMotorCommand()
 {
-  uint16_t channelNumber = cmdMessenger.readInt16Arg();//.readBinArg<uint16_t>();
-  uint16_t channelSpeed = cmdMessenger.readInt16Arg();//.readBinArg<bool>();
+  int16_t channelNumber = cmdMessenger.readInt16Arg();//.readBinArg<uint16_t>();
+  int16_t channelSpeed = cmdMessenger.readInt16Arg();//.readBinArg<bool>();
 
   if(cmdMessenger.isArgOk()&&channelNumber>0&&channelNumber<=2)
   {
     MoveMotor(channelNumber, channelSpeed);
     cmdMessenger.sendCmdStart(kAcknowledge);
-    cmdMessenger.sendCmdArg<uint16_t>(channelNumber);
-    cmdMessenger.sendCmdArg<uint16_t>(channelSpeed);
+    cmdMessenger.sendCmdArg<int16_t>(channelNumber);
+    cmdMessenger.sendCmdArg<int16_t>(channelSpeed);
     cmdMessenger.sendCmdEnd();    
   }else
   {
@@ -92,7 +92,7 @@ void OnMotorCommand()
 
 
 
-void MoveMotor(uint16_t channel, uint16_t cspeed)
+void MoveMotor(int16_t channel, int16_t cspeed)
 {
     if(channel == 1)
     {
