@@ -69,7 +69,7 @@ namespace MeasurementChannelSwitch
         {
             var c = sender.Content.ToString() ;
             var n =int.Parse(c);
-            if(n>MAX_CHANNELS||n<0)
+            if(n>MAX_CHANNELS||n<1)
                 throw new Exception("Wrong channel number");
             return n;
         }

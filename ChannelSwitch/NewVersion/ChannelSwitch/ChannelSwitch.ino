@@ -3,6 +3,8 @@
 #define MAX_CHANNEL 32
 unsigned long previousToggleLed = 0;
 bool ledState = 0;
+uint16_t currentChannel = 1;
+
 //const int LED_PIN = 13;
 const int A0_pin = 2;
 const int A1_pin = 4;
@@ -152,29 +154,34 @@ const int ChBpwm = 11;
 void Initialize()
 {
   int i;
-  for(;i<=MAX_CHANNEL;++i)
+  for(i=1;i<=MAX_CHANNEL;++i)
   {
     SwitchChannel(i,0);
-   }
+  }
 }
-
+//currentChannel
 void SwitchChannel(uint16_t number, uint16_t state)
 {
+  number = number - 1;// channel numeration starts from 1
   digitalWrite(A0_pin,number&0x01);
   digitalWrite(A1_pin,number&0x02);
-  digitalWrite(A2_pin,number&0x03);
-  digitalWrite(A3_pin,number&0x03);
-  digitalWrite(A4_pin,number&0x05);
+  digitalWrite(A2_pin,number&0x04);
+  digitalWrite(A3_pin,number&0x08);
+  digitalWrite(A4_pin,number&0x10);
   digitalWrite(SR_pin,state);
   digitalWrite(Pulse_pin,HIGH);
   delay(delayms);
   digitalWrite(Pulse_pin,LOW);
+
+  //delay(1000);
   digitalWrite(SR_pin,LOW);
   digitalWrite(A0_pin,LOW);
   digitalWrite(A1_pin,LOW);
   digitalWrite(A2_pin,LOW);
   digitalWrite(A3_pin,LOW);
   digitalWrite(A4_pin,LOW);
+
+  delay(100);
 }
 
 void setup() {
