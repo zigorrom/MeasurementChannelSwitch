@@ -162,6 +162,7 @@ void Initialize()
 //currentChannel
 void SwitchChannel(uint16_t number, uint16_t state)
 {
+  state = !state;
   number = number - 1;// channel numeration starts from 1
   digitalWrite(A0_pin,number&0x01);
   digitalWrite(A1_pin,number&0x02);
