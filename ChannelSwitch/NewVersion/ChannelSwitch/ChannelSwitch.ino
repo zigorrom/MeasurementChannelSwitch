@@ -57,10 +57,11 @@ void OnUnknownCommand()
 
 void OnChannelSwitch()
 {
-  uint16_t channelNumber = cmdMessenger.readInt16Arg();//.readBinArg<uint16_t>();
-  bool state = cmdMessenger.readBoolArg();//.readBinArg<bool>();
+  uint16_t channelNumber = cmdMessenger.readInt16Arg();//.readBinArg<uint16_t>();  ////
+  bool state = cmdMessenger.readBoolArg();//.readBinArg<bool>();// 
 
-  if(cmdMessenger.isArgOk()&&channelNumber>0&&channelNumber<=MAX_CHANNEL)
+  bool isArgOk = cmdMessenger.isArgOk();
+  if(isArgOk&&channelNumber>0&&channelNumber<=MAX_CHANNEL)
   {
     SwitchChannel(channelNumber, state);
     cmdMessenger.sendCmdStart(kAcknowledge);
@@ -69,7 +70,8 @@ void OnChannelSwitch()
     cmdMessenger.sendCmdEnd();    
   }else
   {
-    cmdMessenger.sendCmd(kError,"Wrong channel number");
+    
+    cmdMessenger.sendCmd(kError,"Error. ArgIsOk:"+String(isArgOk)+"Ch:"+String(channelNumber)+"St:"+String(state));
   }
   
 }
